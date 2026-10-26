@@ -1,5 +1,5 @@
-> **Muxy fork.** This repository holds the published `gpui` crate source with
-> patches Muxy needs. `main` is the crates.io release plus Muxy commits on top;
+> **Nana fork.** This repository holds the published `gpui` crate source with
+> patches Nana needs. `main` is the crates.io release plus Nana commits on top;
 > upgrading means importing the next release and rebasing those commits.
 > Upstream: https://github.com/zed-industries/zed (crates/gpui).
 
