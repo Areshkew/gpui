@@ -1419,6 +1419,20 @@ fn parse_normal_key(
             modifiers.shift,
             modifiers.alt,
         );
+        // Windows sends AltGr as Ctrl+Alt. When the layout types a character
+        // for Ctrl+Alt+key (ñ on US-International), it is text, not a shortcut.
+        if modifiers.control
+            && modifiers.alt
+            && !modifiers.platform
+            && let Some(text) = key_char
+                .clone()
+                .filter(|text| !text.chars().any(char::is_control))
+        {
+            modifiers.control = false;
+            modifiers.alt = false;
+            modifiers.shift = false;
+            return Some(text);
+        }
         get_keystroke_key(vkey, scan_code as u32, &mut modifiers)
     })?;
     Some(Keystroke {
