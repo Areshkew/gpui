@@ -246,6 +246,17 @@ impl WindowsPlatform {
         std::thread::Builder::new()
             .name("VSyncProvider".to_owned())
             .spawn(move || {
+                // Output that changes a window without input, such as a
+                // terminal printing, is drawn only when this thread wakes.
+                // At normal priority it waits behind work that fills every
+                // core, and the window stops updating. It sleeps between
+                // vblanks and does little when it wakes.
+                unsafe {
+                    let _ = windows::Win32::System::Threading::SetThreadPriority(
+                        windows::Win32::System::Threading::GetCurrentThread(),
+                        windows::Win32::System::Threading::THREAD_PRIORITY_ABOVE_NORMAL,
+                    );
+                }
                 let vsync_provider = VSyncProvider::new();
                 loop {
                     vsync_provider.wait_for_vsync();
